@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Tic - Tac - Toe</title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+			border: 0;
+		}
+		#board{
+			margin: 0 auto;
+			margin-top: 200px;
+			width: 300px;
+		}
+		.box{
+			/*vertical-align: top;*/
+			line-height: 90px;
+			float: left;
+			font-size: 50px;
+			text-align: center;
+			width: 90px;
+			height: 90px;
+			border: 1px solid gray;
+			display: block;
+			/*display: inline-block;*/
+			/*box-sizing: border-box;*/
+		}
+	</style>
+	<script>
+		window.onload = function(){
+				//the sign of the players
+			let playersSigns =['X', 'O'],
+				//the color for each sign
+				color =['#FF0000','#00FF00'],
+				//the current player turn
+				currentPlayer =0,
+				//array of the div box elements
+				boxes,
+				//counter of the number of boxes with assigned signs
+				boxFilled=0,
+				//if winner criteria is met, we change it to true
+				winner = false;
+			//initialization fuction
+			init();
+
+			function init(){
+				boxes=document.getElementsByClassName('box');
+				for (let i = 0; i < boxes.length; i++) {
+					boxes[i].addEventListener('click',markBox);
+				}
+				// clean(document.getElementById('board'));
+			}
+
+			function markBox(){
+				//if the winner condition is met, we disable the event logic :)
+				if(winner) {
+					return;
+				}
+				let sign,
+					currentSign;
+				sign = currentPlayer %2;
+				currentSign = playersSigns[sign];
+				if(!this.innerHTML){
+					this.innerHTML = currentSign;
+					this.style.color = color[sign];
+					if(winnerCondition(this)){
+						winner = true;
+						alert('Player '+currentPlayer+' is the winner!');
+
+					}
+					boxFilled++;
+					sign++;
+					currentPlayer=sign;
+				}
+				
+				if(boxFilled == boxes.length && !winner){
+					alert('Game Draw');
+				}
+			}
+			function winnerCondition(currentBox){
+				//decrease index with one to match with boxes array keys.
+				let index = -1,
+					winnerRow,
+					winnerCol,
+					winnerDiagonal;
+				for (index; currentBox=currentBox.previousSibling; index++);
+				winnerRow = checkRows(index)
+				winnerCol = checkColumns(index)
+				winnerDiagonal = checkDiagonals(index);
+				if(winnerRow || winnerCol || winnerDiagonal){
+					return true;
+				}
+				return false;
+			}
+			function checkRows(index){
+				switch (index % 3){
+					case 0:
+					return ( (boxes[index].innerHTML === boxes[index+1].innerHTML) && (boxes[index].innerHTML === boxes[index+2].innerHTML) );
+					case 1:
+					return ((boxes[index].innerHTML === boxes[index+1].innerHTML) && (boxes[index].innerHTML === boxes[index-1].innerHTML));
+					case 2:
+					return ((boxes[index].innerHTML === boxes[index-1].innerHTML) && (boxes[index].innerHTML === boxes[index-2].innerHTML));
+				}
+			}
+				function checkColumns(index){
+					switch (Math.floor(index/3)){
+						case 0:
+						return ((boxes[index].innerHTML === boxes[index+3].innerHTML) && (boxes[index].innerHTML === boxes[index+6].innerHTML));
+						case 1:
+						return ((boxes[index].innerHTML === boxes[index-3].innerHTML) && (boxes[index].innerHTML === boxes[index+3].innerHTML));
+						case 2:
+						return ((boxes[index].innerHTML === boxes[index-3].innerHTML) && (boxes[index].innerHTML === boxes[index-6].innerHTML));
+					}
+			}
+			function checkDiagonals(index){
+				var diagonalResult = false;
+				if(index % 2 === 0){
+					diagonalResult= ( boxes[0].innerHTML.length>0 && ((boxes[0].innerHTML === boxes[4].innerHTML) && (boxes[0].innerHTML === boxes[8].innerHTML)));
+					if(!diagonalResult){
+					diagonalResult = (boxes[2].innerHTML.length>0 && ((boxes[2].innerHTML === boxes[4].innerHTML) && (boxes[2].innerHTML === boxes[6].innerHTML)));
+					}
+				}
+				return diagonalResult;
+			}
+			// function clean(node){
+			// 	for(let n = 0; n < node.childNodes.length; n++){
+			//     	let child = node.childNodes[n];
+			//     	if(child.nodeType === 8 || (child.nodeType === 3 && !/\S/.test(child.nodeValue)))
+			//     	{
+			//     		node.removeChild(child);
+			//     		n --;
+			//     	}
+			//     	else if(child.nodeType === 1)
+			//     	{
+			//       		clean(child);
+			//     	}
+			//     }
+			// }
+		}
+	</script>
+</head>
+<body>
+	<div id="board">
+		<div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div>
+	</div>
